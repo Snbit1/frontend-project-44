@@ -19,7 +19,7 @@ module.exports = {
   rules: {
     'import/extensions': 'off',
     'import/no-unresolved': 'off',
-    'linebreak-style': 'off',
+    'linebreak-style': ['error', 'unix'],
     'no-console': 'off',
     'import/prefer-default-export': 'off',
     'consistent-return': 'off',
