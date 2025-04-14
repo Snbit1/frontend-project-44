@@ -1,5 +1,5 @@
-import { welcomeUser } from '../cli.js';
-import { getAnswer } from '../index.js';
+import welcomeUser from '../cli.js';
+import getAnswer from '../index.js';
 
 const isPrime = (num) => {
   if (num < 2) {
