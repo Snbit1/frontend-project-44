@@ -1,45 +1,40 @@
-import welcomeUser from '../cli.js';
-import getAnswer from '../index.js';
+import runEngine from '../engine.js';
+import getRandomInt from '../random.js';
 
 const generateProgression = (start, step, length) => {
   const progression = [];
+  let current = start;
+
   for (let i = 0; i < length; i += 1) {
-    progression.push(start + step * i);
+    progression.push(current);
+    current += step;
   }
+
   return progression;
 };
 
-const hideElement = (progression, hiddenIndex) => {
-  const progressionCopy = [...progression];
-  progressionCopy[hiddenIndex] = '..';
-  return progressionCopy.join(' ');
-};
-
 export default () => {
-  const name = welcomeUser();
-  console.log('What number is missing in the progression?');
+  const gameRules = 'What number is missing in the progression?';
 
-  const roundsCount = 3;
+  const generateRound = () => {
+    const start = getRandomInt(1, 10);
+    const step = getRandomInt(1, 5);
+    const length = getRandomInt(5, 10);
+    const hiddenIndex = getRandomInt(0, length - 1);
 
-  for (let i = 0; i < roundsCount; i += 1) {
-    const start = Math.floor(Math.random() * 10) + 1;
-    const step = Math.floor(Math.random() * 5) + 1;
-    const progressionLength = Math.floor(Math.random() * 6) + 5;
-    const hiddenIndex = Math.floor(Math.random() * progressionLength);
-
-    const progression = generateProgression(start, step, progressionLength);
+    const progression = generateProgression(start, step, length);
     const correctAnswer = progression[hiddenIndex];
-    const question = hideElement(progression, hiddenIndex);
 
-    console.log(`Question: ${question}`);
-    const userAnswer = getAnswer('Your answer: ');
-
-    if (parseInt(userAnswer, 10) !== correctAnswer) {
-      console.log(`'${userAnswer}' is wrong answer ;(. Correct answer was '${correctAnswer}'.`);
-      console.log(`Let's try again, ${name}!`);
-      return;
+    let questionString = '';
+    for (let i = 0; i < progression.length; i += 1) {
+      if (i > 0) {
+        questionString += ' ';
+      }
+      questionString += (i === hiddenIndex) ? '..' : progression[i];
     }
-    console.log('Correct!');
-  }
-  console.log(`Congratulations, ${name}!`);
+
+    return [questionString, correctAnswer];
+  };
+
+  return runEngine(gameRules, generateRound);
 };

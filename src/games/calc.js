@@ -1,6 +1,6 @@
 /* eslint-disable indent */
-import welcomeUser from '../cli.js';
-import getAnswer from '../index.js';
+import runEngine from '../engine.js';
+import getRandomInt from '../random.js';
 
 const calculate = (num1, num2, operator) => {
   switch (operator) {
@@ -16,28 +16,19 @@ const calculate = (num1, num2, operator) => {
 };
 
 export default () => {
-  const name = welcomeUser();
-  console.log('What is the result of the expression?');
+  const gameRules = 'What is the result of the expression?';
 
-  const operators = ['+', '-', '*'].sort(() => Math.random() - 0.5);
-  const roundsCount = 3;
+  const generateRound = () => {
+    const operators = ['+', '-', '*'];
+    const number1 = getRandomInt(1, 50);
+    const number2 = getRandomInt(1, 50);
+    const operator = operators[getRandomInt(0, operators.length - 1)];
 
-  for (let i = 0; i < roundsCount; i += 1) {
-    const number1 = Math.floor(Math.random() * 50) + 1;
-    const number2 = Math.floor(Math.random() * 50) + 1;
-    const operator = operators[i];
-
-    console.log(`Question: ${number1} ${operator} ${number2}`);
-
+    const question = `${number1} ${operator} ${number2}`;
     const correctAnswer = calculate(number1, number2, operator);
-    const userAnswer = getAnswer('Your answer: ');
 
-    if (parseInt(userAnswer, 10) !== correctAnswer) {
-      console.log(`'${userAnswer}' is wrong answer ;(. Correct answer was '${correctAnswer}'.`);
-      console.log(`Let's try again, ${name}!`);
-      return;
-    }
-    console.log('Correct!');
-  }
-  console.log(`Congratulations, ${name}!`);
+    return [question, correctAnswer];
+  };
+
+  return runEngine(gameRules, generateRound);
 };

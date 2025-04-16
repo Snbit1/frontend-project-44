@@ -1,5 +1,5 @@
-import welcomeUser from '../cli.js';
-import getAnswer from '../index.js';
+import runEngine from '../engine.js';
+import getRandomInt from '../random.js';
 
 const isPrime = (num) => {
   if (num < 2) {
@@ -15,23 +15,13 @@ const isPrime = (num) => {
 };
 
 export default () => {
-  const name = welcomeUser();
-  console.log('Answer "yes" if given number is prime. Otherwise answer "no".');
+  const gameRules = 'Answer "yes" if given number is prime. Otherwise answer "no".';
 
-  const roundsCount = 3;
-
-  for (let i = 0; i < roundsCount; i += 1) {
-    const number = Math.floor(Math.random() * 100) + 1;
+  const generateRound = () => {
+    const number = getRandomInt(1, 100);
     const correctAnswer = isPrime(number) ? 'yes' : 'no';
 
-    console.log(`Question: ${number}`);
-    const userAnswer = getAnswer('Your answer: ');
-    if (userAnswer !== correctAnswer) {
-      console.log(`'${userAnswer}' is wrong answer ;(. Correct answer was '${correctAnswer}'.`);
-      console.log(`Let's try again, ${name}!`);
-      return;
-    }
-    console.log('Correct!');
-  }
-  console.log(`Congratulations, ${name}!`);
+    return [number.toString(), correctAnswer];
+  };
+  return runEngine(gameRules, generateRound);
 };
